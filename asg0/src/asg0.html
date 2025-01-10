@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>CSE160 Assignment 0</title>
+        <script src="../lib/cuon-matrix-cse160.js"></script>
+    </head>
+
+    <body onload="main()">
+        <canvas id="mainCanvas" width="400" height="400">
+            Dude your browser is <i>aincent</i>. Here go download <a href="https://www.mozilla.org/en-US/firefox/new/">firefox</a>
+        </canvas>
+        <script src="asg0.js"></script>
+        <form>
+            v1: 
+            <label for="xcoord1">X:</label>
+            <input type="text" id="xcoord1" name="xcoord1">
+            <label for="ycoord1">Y:</label>
+            <input type="text" id="ycoord1" name="ycoord1"><br>
+            v2:
+            <label for="xcoord2">X:</label>
+            <input type="text" id="xcoord2" name="xcoord2">
+            <label for="ycoord2">Y:</label>
+            <input type="text" id="ycoord2" name="ycoord2"><br>
+            <input type="button" value="Draw" onclick="handleDrawEvent()">
+        </form>
+        <br>
+        <form>
+            <label for="operation">Operation: </label>
+            <select id="operation" name="operation">
+                <option value="add">Add</option>
+                <option value="sub">Subtract</option>
+                <option value="mul">Multiply</option>
+                <option value="div">Divide</option>
+                <option value="mag">Magnitude</option>
+                <option value="norm">Normalize</option>
+                <option value="angle">Angle Between</option>
+                <option value="cross">Area</option>
+            </select>
+            <label for="scalar">Scalar: </label>
+            <input type="text" id="scalar" name="scalar">
+            <input type="button" value="Draw" onclick="handleDrawOperationEvent()">
+        </form>
+
+        <p> :P<br>Thyme Eppstein teppstei@ucsc.edu<br> January 10, 2025
+        </p> 
+        <p>Notes to Grader:<br> I took some liberties in how I wrote asg0.js. Hopefully it's still readable if you need to go through it. It shouldn't be too confusing.
+        </p>
+    </body>
+</html>
