@@ -44,10 +44,11 @@ class Vector3 {
       * @return this
       */
     add(other) {
-        for (const i in [0,1,2]) {
-          this.elements[i] += other.elements[i]
+        const newV = new Vector3()
+        for (let i in [0,1,2]) {
+          newV.elements[i] = this.elements[i] + other.elements[i]
         }
-        return this;
+        return newV;
     };
 
     /**
@@ -55,10 +56,11 @@ class Vector3 {
       * @return this
       */
     sub(other) {
-      for (const i in [0,1,2]) {
-        this.elements[i] -= other.elements[i]
-      }
-      return this;
+      const newV = new Vector3()
+        for (let i in [0,1,2]) {
+          newV.elements[i] = this.elements[i] - other.elements[i]
+        }
+        return newV;
     };
 
     /**
@@ -66,8 +68,9 @@ class Vector3 {
       * @return this
       */
     div(scalar) {
-      this.elements = this.elements.map(x => x / scalar) 
-      return this;
+      const newV = new Vector3()
+      newV.elements = this.elements.map(x => x / scalar) 
+      return newV;
     };
 
     /**
@@ -75,8 +78,9 @@ class Vector3 {
       * @return this
       */
     mul(scalar) {
-      this.elements = this.elements.map(x => x * scalar) 
-      return this;
+      const newV = new Vector3()
+      newV.elements = this.elements.map(x => x * scalar) 
+      return newV;
     };
 
     /**
@@ -85,7 +89,7 @@ class Vector3 {
       */
     static dot(other1, other2) {
         let d = 0;
-        for (const i in [0,1,2]) {
+        for (let i in [0,1,2]) {
           d += other1.elements[i] * other2.elements[i]
         }
         return d;
@@ -98,11 +102,11 @@ class Vector3 {
     static cross(other1, other2) {
       const o1 = other1.elements
       const o2 = other2.elements
-      let v3 = new Vector3();
-      v3.elements[0] = (o1[1] * o2[2]) - (o1[2] * o2[1])
-      v3.elements[1] = (o1[2] * o2[0]) - (o1[0] * o2[2])
-      v3.elements[2] = (o1[0] * o2[1]) - (o1[1] * o2[0])
-      return v3;
+      let newV = new Vector3();
+      newV.elements[0] = (o1[1] * o2[2]) - (o1[2] * o2[1])
+      newV.elements[1] = (o1[2] * o2[0]) - (o1[0] * o2[2])
+      newV.elements[2] = (o1[0] * o2[1]) - (o1[1] * o2[0])
+      return newV;
     }
 
     /**
@@ -111,7 +115,7 @@ class Vector3 {
       */
     magnitude() {
         let m = 0
-        for (const i in [0,1,2]) {
+        for (let i in [0,1,2]) {
           m += Math.pow(this.elements[i], 2) 
         }
         return Math.sqrt(m);
@@ -123,8 +127,7 @@ class Vector3 {
       */
     normalize() {
         const mag = this.magnitude()
-        this.div(mag)
-        return this;
+        return this.div(mag);
     };
 }
 
