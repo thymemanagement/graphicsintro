@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Decorate the Capybara</title>
+        <script src="../lib/webgl-utils.js"></script>
+        <script src="../lib/webgl-debug.js"></script>
+        <script src="../lib/cuon-utils.js"></script>
+        <script src="../lib/cuon-matrix-cse160.js"></script>
+        <script src="Model.js"></script>
+        <script src="World.js"></script>
+        <script src="Skeleton.js"></script>
+    </head>
+
+    <body onload="main()">
+        <canvas id="mainCanvas" width="600" height="600">
+            Dude your browser is <i>aincent</i>. Here go download <a href="https://www.mozilla.org/en-US/firefox/new/">firefox</a>
+        </canvas>
+        <script src="asg2.js"></script>
+        <br><button type="button" id="clearButton">Clear Canvas</button>
+        <button type="button" id="stopButton">Stop/Start</button>
+        <button type="button" id="removeButton">Toggle Capybara</button>
+        <label for="speedslider">Rotation Speed</label>
+            <input type="range" id="speedslider" name="speedslider" min="0" max="40" value="10">
+        FPS: <span id="fpscount"></span> frames/sec
+        <br><br>
+        Drawing Mode:<br>
+        <div>
+            <button type="button" id="squareButton">Cubes</button>
+            <button type="button" id="triangleButton">Cylinders</button>
+            <button type="button" id="circleButton">Spheres</button>
+            Use <b>Shift+Click</b> to place a primitive. <b>Click and Drag</b> to move the camera. Use the <b>Scroll Wheel</b> to zoom in and out.
+        </div>
+        <br>
+        <div>
+            <label for="redslider">Red</label>
+            <input type="range" id="redslider" name="redslider" min="0" max="255" value="255">
+            <label for="greenslider">Green</label>
+            <input type="range" id="greenslider" name="greenslider" min="0" max="255" value="0">
+            <label for="blueslider">Blue</label>
+            <input type="range" id="blueslider" name="blueslider" min="0" max="255" value="0">
+        </div>
+        <br>
+        <div>
+            <label for="sizeslider">Shape Size</label>
+            <input type="range" id="sizeslider" name="sizeslider" min="1" max="30" value="5" step="1">
+        </div>
+        <br>
+        <div>
+            <label for="yawslider">Yaw</label>
+            <input type="range" id="yawslider" name="yawslider" min="0" max="360" value="0" step="1">
+            <label for="pitchslider">Pitch</label>
+            <input type="range" id="pitchslider" name="pitchslider" min="0" max="90" value="0" step="1">
+            <label for="rollslider">Roll</label>
+            <input type="range" id="rollslider" name="rollslider" min="0" max="360" value="0" step="1">
+        </div>
+</html>

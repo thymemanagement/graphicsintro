@@ -21,7 +21,7 @@ const FSHADER_SRC =
 " gl_FragColor = vec4(ratio * u_FragColor, 1.0);\n" + 
 "}\n"
 
-const FRAMERATE = 120
+const FRAMERATE = 240
 const globalWorld = new World(new Light([3,4,5]), new Camera([0,0,1]), [], new Skeleton())
 let fpscount = null
 let averageFPS = 0
@@ -223,6 +223,8 @@ function main() {
         globalWorld.stopped = !globalWorld.stopped
         setTimeout(tick(env.gl, vars, Date.now()), 1000 / FRAMERATE)
     }
+    const remove = document.getElementById('removeButton')
+    remove.onclick = function () { globalWorld.seeSkeleton = !globalWorld.seeSkeleton }
 
     fpscount = document.getElementById("fpscount")
 
