@@ -21,7 +21,7 @@ const FSHADER_SRC =
 " gl_FragColor = vec4(ratio * u_FragColor, 1.0);\n" + 
 "}\n"
 
-const FRAMERATE = 240
+const FRAMERATE = 60
 const globalWorld = new World(new Light([3,4,5]), new Camera([0,0,1]), [], new Skeleton())
 let fpscount = null
 let averageFPS = 0
