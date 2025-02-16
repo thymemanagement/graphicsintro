@@ -5,9 +5,7 @@ varying vec4 v_Normal;
 varying vec2 v_UV;
 
 void main() {
-    gl_FragColor = vec4(lightValue() * u_FragColor,1.0);
-}
+    lightValue = max(dot(v_Normal, u_lightSource), 0.2);
 
-float lightValue() {
-    return max(dot(v_Normal, u_lightSource), 0.2);
+    gl_FragColor = vec4(lightValue * u_FragColor,1.0);
 }
