@@ -66,6 +66,7 @@ function connectVariablesToGLSL(gl, vshader, fshader) {
 
 async function loadWebGL() {
     const mainVert = await fetch("../assets/main.vert")
+        .then(response => response.text)
     console.log(mainVert)
 
     const gl = setupWebGL()
