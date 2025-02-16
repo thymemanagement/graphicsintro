@@ -60,22 +60,25 @@ class World {
     }
 
     generateWalls(wallArray) {
-        const xoffset = -32
-        const zoffset = -32
+        const xoffset = -GRID_SIZE/2
+        const zoffset = -GRID_SIZE/2
         const yoffset = -0.5
         let wallFaces = []
+        const cubeFaces = Cube.FACES
         const length = wallArray.length
+        const bake = function (x,y,z) {
+            return v => v.scale(0.5,0.5,0.5).translate(x + xoffset, y + yoffset, z + zoffset)
+        }
         wallArray.forEach((row, z) => {
             const width = row.length
             row.forEach((stack, x) => {
                 for (let y = 0; y < stack; y++) {
-                    let cubeFaces = new Cube([x + xoffset, y + yoffset, z + zoffset], 0.5, [0.0,0.2,0.0]).bake()
                     let newFaces = []
-                    if (z === length - 1 || wallArray[z+1][x] <= y) newFaces.push(cubeFaces[0])
-                    if (z === 0 || wallArray[z-1][x] <= y) newFaces.push(cubeFaces[1])
-                    if (x === width - 1 || wallArray[z][x+1] <= y) newFaces.push(cubeFaces[2])
-                    if (x === 0 || wallArray[z][x-1] <= y) newFaces.push(cubeFaces[3])
-                    if (y === stack - 1) newFaces.push(cubeFaces[4])
+                    if (z === length - 1 || wallArray[z+1][x] <= y) newFaces.push(cubeFaces[0].map(bake(x,y,z)))
+                    if (z === 0 || wallArray[z-1][x] <= y) newFaces.push(cubeFaces[1].map(bake(x,y,z)))
+                    if (x === width - 1 || wallArray[z][x+1] <= y) newFaces.push(cubeFaces[2].map(bake(x,y,z)))
+                    if (x === 0 || wallArray[z][x-1] <= y) newFaces.push(cubeFaces[3].map(bake(x,y,z)))
+                    if (y === stack - 1) newFaces.push(cubeFaces[4].map(bake(x,y,z)))
                     wallFaces = wallFaces.concat(newFaces)
                     block_count++
                 }

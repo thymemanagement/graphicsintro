@@ -1,5 +1,7 @@
-const WALLS = new Array(64).fill(new Array(64).fill(0)).map((xs,z) => xs.map((a,x) => Math.abs(x - 32) + Math.abs(z - 32) + rand()))
+GRID_SIZE = 20
+
+const WALLS = new Array(GRID_SIZE).fill(new Array(GRID_SIZE).fill(0)).map((xs,z) => xs.map((a,x) => rand()))
 
 function rand() {
-    return Math.trunc(10 * Math.pow(Math.random(),2))
+    return Math.trunc(20 * Math.pow(Math.random(),2))
 }

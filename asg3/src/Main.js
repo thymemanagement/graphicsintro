@@ -29,7 +29,6 @@ const FSHADER_SRC =
 
 const FRAMERATE = 60
 const globalWorld = new World(new Light([3,4,5]), new Camera([0,0,70]), [], new Skeleton())
-let fpscount = null
 let averageFPS = 0
 
 function setupWebGL() {
@@ -38,7 +37,7 @@ function setupWebGL() {
     gl.enable(gl.DEPTH_TEST)
     gl.clearColor(0.2,0.2,0.7,1.0)
     gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT)
-    return {canvas: canvas, gl: gl}
+    return gl
 }
 
 function connectVariablesToGLSL(gl, vshader, fshader) {
@@ -58,21 +57,27 @@ function connectVariablesToGLSL(gl, vshader, fshader) {
     vars.u_lightSource = gl.getUniformLocation(gl.program, 'u_lightSource')
     vars.u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor')
 
-    vars.vertexBuffer = gl.createBuffer()
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, vars.vertexBuffer)
-
-    const flSize = 4
-    gl.vertexAttribPointer(vars.a_Position, 3, gl.FLOAT, false, flSize * 8, flSize * 0)
     gl.enableVertexAttribArray(vars.a_Position)
-
-    gl.vertexAttribPointer(vars.a_Normal, 3, gl.FLOAT, true, flSize * 8, flSize * 3)
     gl.enableVertexAttribArray(vars.a_Normal)
-
-    gl.vertexAttribPointer(vars.a_UV, 2, gl.FLOAT, true, flSize * 8, flSize * 6)
     gl.enableVertexAttribArray(vars.a_UV)
 
     return vars
+}
+
+async function loadWebGL() {
+    const mainVert = await fetch("../assets/main.vert")
+    console.log(mainVert)
+
+    const gl = setupWebGL()
+    const vars = connectVariablesToGLSL(gl, VSHADER_SRC, FSHADER_SRC)
+
+    const stop = document.getElementById('stopButton')
+    stop.onclick = function () { 
+        globalWorld.stopped = !globalWorld.stopped
+        setTimeout(tick(gl, vars, Date.now()), 1000 / FRAMERATE)
+    }
+
+    setTimeout(tick(gl, vars, Date.now()), 1000 / FRAMERATE)
 }
 
 function tick(gl, vars, oldTime) {
@@ -83,23 +88,22 @@ function tick(gl, vars, oldTime) {
             globalWorld.manageInputs()
             globalWorld.update(delta)
             globalWorld.render(gl, vars)
-            if (averageFPS === 0 || newTime % 1000 === 0) {
+            if (averageFPS === 0 || Math.trunc(newTime/1000) % 10 === 0) {
                 averageFPS = 1 / delta
             } else {
                 averageFPS = (averageFPS + (1 / delta)) / 2
-                fpscount.innerHTML = (Math.round(1000 * averageFPS) / 1000) + ""
+                document.getElementById("fpscount").innerHTML = (Math.round(1000 * averageFPS) / 1000) + ""
             }
             requestAnimationFrame(tick(gl, vars, newTime))
         }
     })
 }
 
-function clearCanvas(gl) {
+function clearCanvas() {
     globalWorld.clearModels()
-    gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT)
 }
 
-function click(ev, gl, canvas, vars, shape_picker) {
+function click(ev, canvas, shape_picker) {
     var x = ev.clientX; // x coordinate of a mouse pointer
     var y = ev.clientY; // y coordinate of a mouse pointer
     var rect = ev.target.getBoundingClientRect() ;
@@ -122,7 +126,7 @@ function click(ev, gl, canvas, vars, shape_picker) {
         pitch = document.getElementById("pitchslider")
         roll = document.getElementById("rollslider")
         let color = [red.value / 255, green.value / 255 , blue.value / 255]
-        let position = new Vector3([x,y,0])
+        let position = new Vector3([x+70,y,0])
         let cameraM = globalWorld.camera.getCameraRotation()
         let newPos = cameraM.multiplyVector3(position).elements
 
@@ -141,43 +145,28 @@ function click(ev, gl, canvas, vars, shape_picker) {
 }
 
 function main() {
-    const env = setupWebGL()
-    const vars = connectVariablesToGLSL(env.gl, VSHADER_SRC, FSHADER_SRC)
+    loadWebGL()
+
+    const canvas = document.getElementById("mainCanvas")
 
     let shape_picker = {shape: "square"}
-    env.canvas.onmousedown = function(ev) { 
-        click(ev, env.gl, env.canvas, vars, shape_picker)
-    }
-    env.canvas.onmousemove = function(ev) { 
-        click(ev, env.gl, env.canvas, vars, shape_picker)
-    }
 
     const clear = document.getElementById('clearButton')
-    clear.onclick = function () { clearCanvas(env.gl) }
-    const stop = document.getElementById('stopButton')
-    stop.onclick = function () { 
-        globalWorld.stopped = !globalWorld.stopped
-        setTimeout(tick(env.gl, vars, Date.now()), 1000 / FRAMERATE)
-    }
+    clear.onclick = function () { clearCanvas() }
     const grounded = document.getElementById('groundedButton')
     grounded.onclick = function () {
         globalWorld.camera.grounded = !globalWorld.camera.grounded
     }
 
-    fpscount = document.getElementById("fpscount")
-
-    /*env.canvas.onwheel = function (ev) {
-        if (ev.deltaY < 0) {
-            globalWorld.camera.zoom = Math.max((globalWorld.camera.zoom - 0.5), 0)
-        } else if (ev.deltaY > 0) {
-            globalWorld.camera.zoom = Math.min((globalWorld.camera.zoom + 0.5), 10)
-        }
-    }*/
-
+    canvas.onmousedown = function(ev) { 
+        click(ev, canvas, shape_picker)
+    }
+    canvas.onmousemove = function(ev) { 
+        click(ev, canvas, shape_picker)
+    }
     document.onkeydown = function (ev) {
         globalWorld.inputs[ev.code] = true
     }
-
     document.onkeyup = function (ev) {
         globalWorld.inputs[ev.code] = false
     }
@@ -188,7 +177,6 @@ function main() {
     triangle.onclick = function () { shape_picker.shape = "triangle" }
     const circle = document.getElementById('circleButton')
     circle.onclick = function () { shape_picker.shape = "circle" }
-    setTimeout(tick(env.gl, vars, Date.now()), 1000 / FRAMERATE)
 
     document.getElementById("blocks").innerHTML = block_count
 }

@@ -1,4 +1,5 @@
 const SCALE = 1
+const FLOAT_SIZE = 4
 
 class Vertex {
     constructor(x, y, z, xn, yn, zn, u, v) {
@@ -28,6 +29,10 @@ class Vertex {
     changeNormal(xn, yn, zn) {
         return new Vertex(this.pos[0], this.pos[1], this.pos[2], xn, yn, zn, this.uv[0], this.uv[1]) 
     }
+
+    translate(xt, yt, zt) {
+        return new Vertex(this.pos[0] + xt, this.pos[1] + yt, this.pos[2] + zt, this.norm[0], this.norm[1], this.norm[2], this.uv[0], this.uv[1])
+    }
 }
 
 class Model {
@@ -38,6 +43,7 @@ class Model {
         this.scale = scale
         this.vData = data
         this.vCount = data.length / 8
+        this.buffer = null
     }
 
     getVertexData() {
@@ -55,12 +61,22 @@ class Model {
     //this is drawCube(). Techinically it can draw any model, but if you give it cube vertices it'll draw a cube.
     //the math for calculating the verteces of a cube are in the Cube class below
     render(gl, vars) {
+        if (this.buffer === null) {
+            this.buffer = gl.createBuffer()
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer)
+            gl.bufferData(gl.ARRAY_BUFFER, this.getVertexData(), gl.STATIC_DRAW)
+        } else {
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer)
+        }
+        gl.vertexAttribPointer(vars.a_Position, 3, gl.FLOAT, false, FLOAT_SIZE * 8, FLOAT_SIZE * 0)
+        gl.vertexAttribPointer(vars.a_Normal, 3, gl.FLOAT, true, FLOAT_SIZE * 8, FLOAT_SIZE * 3)
+        gl.vertexAttribPointer(vars.a_UV, 2, gl.FLOAT, true, FLOAT_SIZE * 8, FLOAT_SIZE * 6)
+        
         let orient = this.getOrientMatrix()
         let model = this.getModelMatrix(orient)
         gl.uniformMatrix4fv(vars.u_modelMatrix, false, model.elements)
         gl.uniformMatrix4fv(vars.u_orientMatrix, false, orient.elements)
         gl.uniform3f(vars.u_FragColor, this.color[0], this.color[1], this.color[2])
-        gl.bufferData(gl.ARRAY_BUFFER, this.getVertexData(), gl.STATIC_DRAW)
         gl.drawArrays(gl.TRIANGLES, 0, this.getVertexCount())
     }
 
