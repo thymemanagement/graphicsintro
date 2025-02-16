@@ -65,12 +65,13 @@ function connectVariablesToGLSL(gl, vshader, fshader) {
 }
 
 async function loadWebGL() {
-    const mainVert = await fetch("../assets/main.vert")
-        .then(response => response.text)
-    console.log(mainVert)
+    const mainVert = await fetch("https://thymemanagement.github.io/graphicsintro/asg3/assets/main.vert")
+        .then(response => response.text())
+    const uvFrag = await fetch("https://thymemanagement.github.io/graphicsintro/asg3/assets/uv.frag")
+        .then(response => response.text())
 
     const gl = setupWebGL()
-    const vars = connectVariablesToGLSL(gl, VSHADER_SRC, FSHADER_SRC)
+    const vars = connectVariablesToGLSL(gl, mainVert, uvFrag)
 
     const stop = document.getElementById('stopButton')
     stop.onclick = function () { 
