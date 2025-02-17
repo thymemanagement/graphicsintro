@@ -7,9 +7,10 @@ class World {
         this.models = models
         this.walls = this.generateWalls(WALLS)
         this.skeleton = skeleton
-        this.ground = new Cube([0,-101,0], 100, [0,1,0])
+        this.ground = new Cube([0,-101,0], 100, [0.2,0.6,0.3])
         this.sky = new Cube([0,0,0],200,[0.2,0.2,0.7])
         this.sky.shaderType = 'basic'
+        this.ground.shaderType = 'river'
 
         this.inputs = {lastX: 0, lastY: 0, newX: 0, newY: 0}
         this.lastX = 0
@@ -88,7 +89,7 @@ class World {
             })
         })
         const wallModel = new Model([0,0,0],[0.9,0.2,0.0], 1, Model.generateVertexData(wallFaces))
-        wallModel.shaderType = 'uv'
+        wallModel.shaderType = 'texture'
         return wallModel
     }
 }
@@ -100,7 +101,7 @@ class Light {
     }
 
     update(delta) {
-        this.rotation = this.rotation.multiply(Quaternion.fromAngleAxis(degreeToRad(20 * delta), 0, 1, 0))
+        this.rotation = this.rotation.multiply(Quaternion.fromAngleAxis(degreeToRad(20 * delta), 1, 0, 0))
     }
 
     attachVariables(gl, shaders) {

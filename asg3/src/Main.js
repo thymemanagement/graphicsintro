@@ -1,61 +1,6 @@
 const FRAMERATE = 60
-const globalWorld = new World(new Light([3,4,5]), new Camera([0,0,70]), [], new Skeleton())
+const globalWorld = new World(new Light([0,1,0.3]), new Camera([-30,0,70]), [], new Skeleton())
 let averageFPS = 0
-
-function setupWebGL() {
-    const canvas = document.getElementById("mainCanvas")
-    const gl = getWebGLContext(canvas)
-    gl.enable(gl.DEPTH_TEST)
-    gl.clearColor(0.0,0.0,0.0,1.0)
-    gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT)
-    return gl
-}
-
-function createGLProgram(gl, vshader, fshader) {
-    if (!initShaders(gl, vshader, fshader)) {
-        console.log("shaders failed to load")
-    }
-    let vars = {}
-
-    vars.program = gl.program
-    vars.a_Position = gl.getAttribLocation(gl.program, 'a_Position')
-    vars.a_Normal = gl.getAttribLocation(gl.program, 'a_Normal')
-    vars.a_UV = gl.getAttribLocation(gl.program, 'a_UV')
-    vars.u_modelMatrix = gl.getUniformLocation(gl.program, 'u_modelMatrix')
-    vars.u_viewMatrix = gl.getUniformLocation(gl.program, 'u_viewMatrix')
-    vars.u_projectionMatrix = gl.getUniformLocation(gl.program, 'u_projectionMatrix')
-    vars.u_orientMatrix = gl.getUniformLocation(gl.program, 'u_orientMatrix')
-
-    vars.u_lightSource = gl.getUniformLocation(gl.program, 'u_lightSource')
-    vars.u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor')
-    vars.u_texture = gl.getUniformLocation(gl.program, 'u_texture')
-
-    gl.enableVertexAttribArray(vars.a_Position)
-    gl.enableVertexAttribArray(vars.a_Normal)
-    gl.enableVertexAttribArray(vars.a_UV)
-
-    return vars
-}
-
-async function loadWebGL() {
-    const mainVert = document.getElementById("mainVert").innerHTML
-    const uvFrag = document.getElementById("uvFrag").innerHTML
-    const basicFrag = document.getElementById("basicFrag").innerHTML
-
-    const programs = {}
-
-    const gl = setupWebGL()
-    programs.uv = createGLProgram(gl, mainVert, uvFrag)
-    programs.basic = createGLProgram(gl, mainVert, basicFrag)
-
-    const stop = document.getElementById('stopButton')
-    stop.onclick = function () { 
-        globalWorld.stopped = !globalWorld.stopped
-        setTimeout(tick(gl, programs, Date.now()), 1000 / FRAMERATE)
-    }
-
-    setTimeout(tick(gl, programs, Date.now()), 1000 / FRAMERATE)
-}
 
 function tick(gl, programs, oldTime) {
     return (function () {
@@ -106,12 +51,13 @@ function click(ev, canvas, shape_picker) {
         let position = new Vector3([x,y,-2])
         let cameraM = globalWorld.camera.getCameraRotation()
         let newPos = cameraM.multiplyVector3(position).add(globalWorld.camera.physics.pos).elements
-        console.log(newPos)
         let rotateQ = Quaternion.fromYawPitchRoll(degreeToRad(yaw.value), degreeToRad(pitch.value), degreeToRad(roll.value))
 
         let model = null
         if (shape_picker.shape === "square") {
             model = new Cube(newPos, size.value / 60, color, rotateQ)
+            model.shaderType = 'texture'
+            model.texture = Model.gemTexture
         } else if (shape_picker.shape === "triangle") {
             model = new Cylinder(newPos, size.value / 60, color, rotateQ)
         } else if (shape_picker.shape === "circle") {
@@ -122,8 +68,6 @@ function click(ev, canvas, shape_picker) {
 }
 
 function main() {
-    loadWebGL()
-
     const canvas = document.getElementById("mainCanvas")
 
     let shape_picker = {shape: "square"}
@@ -156,4 +100,6 @@ function main() {
     circle.onclick = function () { shape_picker.shape = "circle" }
 
     document.getElementById("blocks").innerHTML = block_count
+
+    loadWebGL(canvas, tick)
 }

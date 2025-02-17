@@ -81,6 +81,6 @@ class Camera {
     }
 
     getProjectionMatrix() {
-        return new Matrix4().setPerspective(this.fov,1,0.1,1000)
+        return new Matrix4().setPerspective(this.fov,1.5,0.1,1000)
     }
 }

@@ -1,23 +1,7 @@
 const SCALE = 1
 const FLOAT_SIZE = 4
-
-function generateTexture(gl, imgPath) {
-    const texture = gl.createTexture()
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-
-    const image = new Image();
-    image.onload = () => {
-      gl.activeTexture(texture)
-      gl.bindTexture(gl.TEXTURE_2D, texture)
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    };
-
-    image.crossOrigin = "anonymous";
-    image.src = imgPath;
-
-    return texture
-}
+const GRANITE_PATH = "https://thymemanagement.github.io/graphicsintro/asg3/assets/granite.png"
+const AMETHYST_PATH = "https://thymemanagement.github.io/graphicsintro/asg3/assets/amethyst_block.png"
 
 class Vertex {
     constructor(x, y, z, xn, yn, zn, u, v) {
@@ -54,6 +38,9 @@ class Vertex {
 }
 
 class Model {
+    static wallTexture = null
+    static gemTexture = null
+
     constructor(pos, color, scale, data) {
         this.pos = pos
         this.rot = new Quaternion(1,0,0,0)
@@ -62,6 +49,7 @@ class Model {
         this.vData = data
         this.vCount = data.length / 8
         this.buffer = null
+        this.texture = null
         this.shaderType = 'uv'
     }
 
@@ -80,18 +68,27 @@ class Model {
     //this is drawCube(). Techinically it can draw any model, but if you give it cube vertices it'll draw a cube.
     //the math for calculating the verteces of a cube are in the Cube class below
     render(gl, shaders) {
+        if (Model.wallTexture === null) {
+            Model.wallTexture = generateTexture(gl, GRANITE_PATH)
+        }
+        if (Model.gemTexture === null) {
+            Model.gemTexture = generateTexture(gl, AMETHYST_PATH)
+        }
+
+        if (this.texture === null) {
+            this.texture = Model.wallTexture
+        }
+
         if (this.buffer === null) {
             this.buffer = gl.createBuffer()
             gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer)
             gl.bufferData(gl.ARRAY_BUFFER, this.getVertexData(), gl.STATIC_DRAW)
-        } else {
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer)
-        }
+        } 
+
         let shader = shaders[this.shaderType]
         gl.useProgram(shader.program)
-        gl.vertexAttribPointer(shader.a_Position, 3, gl.FLOAT, false, FLOAT_SIZE * 8, FLOAT_SIZE * 0)
-        gl.vertexAttribPointer(shader.a_Normal, 3, gl.FLOAT, true, FLOAT_SIZE * 8, FLOAT_SIZE * 3)
-        gl.vertexAttribPointer(shader.a_UV, 2, gl.FLOAT, true, FLOAT_SIZE * 8, FLOAT_SIZE * 6)
+        swapVertexBuffer(gl, shader, this.buffer)
+        gl.bindTexture(gl.TEXTURE_2D, this.texture)
 
         let orient = this.getOrientMatrix()
         let model = this.getModelMatrix(orient)

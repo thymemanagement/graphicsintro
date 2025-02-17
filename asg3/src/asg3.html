@@ -32,12 +32,36 @@
 
             void main() {
                 float lightValue = max(dot(v_Normal, u_lightSource), 0.2);
-
+                
                 vec3 left = mix(vec3(1.0,1.0,1.0),vec3(0.0,0.0,0.0),v_UV[1]);
                 vec3 right = mix(u_FragColor, vec3(0.0,0.0,0.0), v_UV[1]);
                 gl_FragColor = vec4(lightValue * mix(left, right, v_UV[0]),1.0);
             }
         </script>
+
+        <script id="riverFrag" type="x-shader/x-fragment">
+            precision mediump float;
+            uniform vec4 u_lightSource;
+            uniform vec3 u_FragColor;
+            uniform sampler2D u_texture;
+            varying vec4 v_Normal;
+            varying vec2 v_UV;
+
+            void main() {
+                float lightValue = max(dot(v_Normal, u_lightSource), 0.2);
+                
+                float riverEdge = 0.32 + (0.05 * cos(4.0 * v_UV[1]));
+                float riverWidth = 0.06 + (0.03 * sin(0.5 * v_UV[1]));
+                if (v_UV[0] > riverEdge && v_UV[0] < riverEdge + riverWidth) {
+                    gl_FragColor = vec4(lightValue * vec3(0.035,0.058,0.38), 1.0);
+                } else {
+                    vec3 left = mix(vec3(1.0,1.0,1.0),vec3(0.0,0.0,0.0),v_UV[1]);
+                    vec3 right = mix(u_FragColor, vec3(0.0,0.0,0.0), v_UV[1]);
+                    gl_FragColor = vec4(lightValue * mix(left, right, v_UV[0]),1.0);
+                }
+            }
+        </script>
+
 
         <script id="basicFrag" type="x-shader/x-fragment">
             precision mediump float;
@@ -63,7 +87,7 @@
             void main() {
                 float lightValue = max(dot(v_Normal, u_lightSource), 0.2);
 
-                image = lightValue * texture2D(u_texture, v_UV)
+                vec3 image = vec3(lightValue * texture2D(u_texture, v_UV));
                 gl_FragColor = vec4(image,1.0);
             }
         </script>
@@ -73,6 +97,7 @@
         <script src="../lib/cuon-utils.js"></script>
         <script src="../lib/cuon-matrix-cse160.js"></script>
 
+        <script src="InitGL.js"></script>
         <script src="Walls.js" id="walls"></script>
         <script src="Quaternion.js"></script>
         <script src="Physics.js"></script>
@@ -84,12 +109,13 @@
     </head>
 
     <body onload="main()">
-        <canvas id="mainCanvas" width="800" height="800">
+        <canvas id="mainCanvas" width="1200" height="800">
             Dude your browser is <i>aincent</i>. Here go download <a href="https://www.mozilla.org/en-US/firefox/new/">firefox</a>
         </canvas>
         <br> Thyme Eppstein | teppstei@ucsc.edu | February 16, 2025
         <button type="button" id="clearButton">Clear Canvas</button>
         <button type="button" id="stopButton">Stop/Start</button>
+        <button type="button" id="groundedButton">Toggle Flying</button>
         Block Count: <span id="blocks"></span>
         FPS: <span id="fpscount"></span> frames/sec
         Speed: <span id="speed"></span>
@@ -99,7 +125,6 @@
             <button type="button" id="squareButton">Cubes</button>
             <button type="button" id="triangleButton">Cylinders</button>
             <button type="button" id="circleButton">Spheres</button>
-            <button type="button" id="groundedButton">Grounded?</button>
             Use <b>Shift+Click</b> to place a primitive. <b>Click and Drag</b> to move the camera. Use the <b>Scroll Wheel</b> to zoom in and out.
         </div>
         <div>
