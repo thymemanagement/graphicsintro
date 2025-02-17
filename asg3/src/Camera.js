@@ -11,6 +11,7 @@ class Camera {
         this.acc = 1
         this.maxspeed
         this.movingDirection = new Vector3([0,0,0])
+        this.cameraTurn = 0
 
     }
 
@@ -31,10 +32,17 @@ class Camera {
         } else if (inputs['KeyD'] == true) {
             newDirection = newDirection.add(rot.multiplyVector3(new Vector3([1,0,0])))
         }
-        if (inputs['KeyQ'] == true) {
+        if (inputs['KeyR'] == true) {
             newDirection = newDirection.add(new Vector3([0,1,0]))
-        } else if (inputs['KeyE'] == true) {
+        } else if (inputs['KeyF'] == true) {
             newDirection = newDirection.add(new Vector3([0,-1,0]))
+        }
+        if (inputs['KeyQ'] == true) {
+            this.cameraturn = -1
+        } else if (inputs['KeyE'] == true) {
+            this.cameraturn = 1
+        } else {
+            this.cameraturn = 0
         }
         this.movingDirection = newDirection.normalize()
         this.physics.updateMovingDirection(this.movingDirection)
@@ -44,6 +52,11 @@ class Camera {
         //let angle = degreeToRad(delta * 10)
         //this.worldSpin = this.worldSpin.rotateByAngleAxis(angle, 0, 1, 0)
         this.physics.update(delta)
+        if (this.cameraturn > 0) {
+            this.worldYaw = Math.mod(this.worldYaw + (30 * delta),360)
+        } else if (this.cameraturn < 0) {
+            this.worldYaw = Math.mod(this.worldYaw - (30 * delta),360)
+        }
     }
 
     newRotation(yaw, pitch) {

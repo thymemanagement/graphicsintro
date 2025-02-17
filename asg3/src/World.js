@@ -21,6 +21,7 @@ class World {
         this.modelQueue = []
         this.shouldClear = false
         this.stopped = false
+        this.showanimal = true
 
     }
 
@@ -60,7 +61,9 @@ class World {
             model.render(gl, shaders)
         })
         this.walls.render(gl, shaders)
-        //this.skeleton.render(gl, shaders)
+        if (this.showanimal) {
+            this.skeleton.render(gl, shaders)
+        }
     }
 
     generateWalls(wallArray) {

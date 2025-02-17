@@ -113,8 +113,8 @@
             Dude your browser is <i>aincent</i>. Here go download <a href="https://www.mozilla.org/en-US/firefox/new/">firefox</a>
         </canvas>
         <br> Thyme Eppstein | teppstei@ucsc.edu | February 16, 2025
-        <button type="button" id="clearButton">Clear Canvas</button>
-        <button type="button" id="stopButton">Stop/Start</button>
+        <button type="button" id="clearButton">Clear Blocks</button>
+        <button type="button" id="stopButton">Freeze Rendering</button>
         <button type="button" id="groundedButton">Toggle Flying</button>
         Block Count: <span id="blocks"></span>
         FPS: <span id="fpscount"></span> frames/sec
@@ -122,10 +122,12 @@
         Accel: <span id="moving"></span>
         <br>
         <div>
+            <button type="button" id="gemButton">Amethyst</button>
             <button type="button" id="squareButton">Cubes</button>
             <button type="button" id="triangleButton">Cylinders</button>
             <button type="button" id="circleButton">Spheres</button>
-            Use <b>Shift+Click</b> to place a primitive. <b>Click and Drag</b> to move the camera. Use the <b>Scroll Wheel</b> to zoom in and out.
+            <button type="button" id="animalButton">Capybara</button>
+            Walk around with <b>WASD</b>. Press <b>R</b> to go up and <b>F</b> to go down. <b>Click and Drag</b> the left mouse to move the camera. Press <b>Shift+Click</b> to place down a shape.
         </div>
         <div>
             <label for="redslider">Red</label>
@@ -134,11 +136,12 @@
             <input type="range" id="greenslider" name="greenslider" min="0" max="255" value="0">
             <label for="blueslider">Blue</label>
             <input type="range" id="blueslider" name="blueslider" min="0" max="255" value="0">
+            <button type="button" id="hideanimal">Hide Capybara</button> -It actually helps your performance a ton. I really need to get back and fix up this guy sometime.
         </div>
         <br>
         <div>
             <label for="sizeslider">Shape Size</label>
-            <input type="range" id="sizeslider" name="sizeslider" min="1" max="30" value="5" step="1">
+            <input type="range" id="sizeslider" name="sizeslider" min="1" max="30" value="30" step="1">
             <label for="yawslider">Yaw</label>
             <input type="range" id="yawslider" name="yawslider" min="0" max="360" value="0" step="1">
             <label for="pitchslider">Pitch</label>

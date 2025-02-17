@@ -67,7 +67,7 @@ class Model {
 
     //this is drawCube(). Techinically it can draw any model, but if you give it cube vertices it'll draw a cube.
     //the math for calculating the verteces of a cube are in the Cube class below
-    render(gl, shaders) {
+    render(gl, shaders, rotateMatrix=new Matrix4(), translateMatrix=new Matrix4()) {
         if (Model.wallTexture === null) {
             Model.wallTexture = generateTexture(gl, GRANITE_PATH)
         }
@@ -90,19 +90,21 @@ class Model {
         swapVertexBuffer(gl, shader, this.buffer)
         gl.bindTexture(gl.TEXTURE_2D, this.texture)
 
-        let orient = this.getOrientMatrix()
-        let model = this.getModelMatrix(orient)
-        gl.uniformMatrix4fv(shader.u_modelMatrix, false, model.elements)
-        gl.uniformMatrix4fv(shader.u_orientMatrix, false, orient.elements)
+        let newOrient = this.getOrientMatrix().multiply(rotateMatrix)
+        let newModel = new Matrix4().multiply(translateMatrix).multiply(this.getModelMatrix(this.getOrientMatrix(), rotateMatrix))
+        gl.uniformMatrix4fv(shader.u_modelMatrix, false, newModel.elements)
+        gl.uniformMatrix4fv(shader.u_orientMatrix, false, newOrient.elements)
         gl.uniform3f(shader.u_FragColor, this.color[0], this.color[1], this.color[2])
         gl.drawArrays(gl.TRIANGLES, 0, this.getVertexCount())
     }
 
-    getModelMatrix(orientMatrix) {
+    getModelMatrix(orientM, rotateMatrix=new Matrix4()) {
         let M = new Matrix4()
-        M.translate(this.pos[0],this.pos[1],this.pos[2])
+        let v = new Vector3(this.pos)
+        let newPos = rotateMatrix.multiplyVector3(v).elements
+        M.translate(newPos[0],newPos[1],newPos[2])
         M.scale(this.scale, this.scale, this.scale)
-        M.multiply(orientMatrix)
+        M.multiply(orientM)
         return M
     }
 

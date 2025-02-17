@@ -15,7 +15,7 @@ class Skeleton extends Model {
     }
 
     render(gl, vars) {
-        this.centerJoint.render(gl, vars)
+        this.centerJoint.render(gl, vars, new Vector3([-1,0,0]), new Vector3(this.pos))
     }
 }
 
@@ -91,7 +91,7 @@ class Bone {
         let newVector = newDirection.mul(this.length).add(lastVector)
         let translateM = new Matrix4().translate(newVector.elements[0],newVector.elements[1],newVector.elements[2])
 
-        this.models.forEach(model => model.render(gl, vars))
-        this.joints.forEach(joint => joint.render(gl, vars, lastDirection, lastVector))
+        this.models.forEach(model => model.render(gl, vars, rotateM, translateM))
+        this.joints.forEach(joint => joint.render(gl, vars, newDirection, newVector))
     }
 }
