@@ -1,7 +1,6 @@
 class Camera {
     constructor(pos) {
-        this.pos = pos
-        this.physics = new Physics(this.pos)
+        this.physics = new Physics(pos)
         this.worldSpin = Quaternion.fromAngleAxis(0,0,1,0)
         this.worldYaw = 0
         this.worldPitch = 0
@@ -44,8 +43,6 @@ class Camera {
     update(delta) {
         //let angle = degreeToRad(delta * 10)
         //this.worldSpin = this.worldSpin.rotateByAngleAxis(angle, 0, 1, 0)
-        let posV = new Vector3(this.pos)
-        this.pos = posV.add(this.movingDirection.mul(delta * this.speed)).elements
         this.physics.update(delta)
     }
 
@@ -54,9 +51,12 @@ class Camera {
         this.worldPitch = Math.min(90,Math.max(-90,(this.sensitivity * pitch + this.worldPitch)))
     }
 
-    attachVariables(gl, vars) {
-        gl.uniformMatrix4fv(vars.u_viewMatrix, false, this.getViewMatrix().elements)
-        gl.uniformMatrix4fv(vars.u_projectionMatrix, false, this.getProjectionMatrix().elements)
+    attachVariables(gl, shaders) {
+        Object.entries(shaders).forEach(([key, shader]) => {
+            gl.useProgram(shader.program)
+            gl.uniformMatrix4fv(shader.u_viewMatrix, false, this.getViewMatrix().elements)
+            gl.uniformMatrix4fv(shader.u_projectionMatrix, false, this.getProjectionMatrix().elements)
+        })
     }
 
     getViewMatrix() {

@@ -8,6 +8,8 @@ class World {
         this.walls = this.generateWalls(WALLS)
         this.skeleton = skeleton
         this.ground = new Cube([0,-101,0], 100, [0,1,0])
+        this.sky = new Cube([0,0,0],200,[0.2,0.2,0.7])
+        this.sky.shaderType = 'basic'
 
         this.inputs = {lastX: 0, lastY: 0, newX: 0, newY: 0}
         this.lastX = 0
@@ -47,16 +49,17 @@ class World {
         this.skeleton.update(delta)
     }
 
-    render(gl, vars) {
+    render(gl, shaders) {
         gl.clear(gl.COLOR_BUFFER_BIT, gl.DEPTH_BUFFER_BIT)
-        this.light.attachVariables(gl, vars)
-        this.camera.attachVariables(gl, vars)
-        this.ground.render(gl, vars)
+        this.light.attachVariables(gl, shaders)
+        this.camera.attachVariables(gl, shaders)
+        this.sky.render(gl, shaders)
+        this.ground.render(gl, shaders)
         this.models.forEach((model) => {
-            model.render(gl, vars)
+            model.render(gl, shaders)
         })
-        this.walls.render(gl, vars)
-        //this.skeleton.render(gl, vars)
+        this.walls.render(gl, shaders)
+        //this.skeleton.render(gl, shaders)
     }
 
     generateWalls(wallArray) {
@@ -84,7 +87,9 @@ class World {
                 }
             })
         })
-        return new Model([0,0,0],[0.9,0.2,0.0], 1, Model.generateVertexData(wallFaces))
+        const wallModel = new Model([0,0,0],[0.9,0.2,0.0], 1, Model.generateVertexData(wallFaces))
+        wallModel.shaderType = 'uv'
+        return wallModel
     }
 }
 
@@ -98,8 +103,11 @@ class Light {
         this.rotation = this.rotation.multiply(Quaternion.fromAngleAxis(degreeToRad(20 * delta), 0, 1, 0))
     }
 
-    attachVariables(gl, vars) {
+    attachVariables(gl, shaders) {
         const lightPos = this.rotation.getRotationMatrix().multiplyVector3(this.norm).normalize().elements
-        gl.uniform4f(vars.u_lightSource, lightPos[0], lightPos[1], lightPos[2], 1.0)
+        Object.entries(shaders).forEach(([key, shader]) => {
+            gl.useProgram(shader.program)
+            gl.uniform4f(shader.u_lightSource, lightPos[0], lightPos[1], lightPos[2], 1.0)
+        })
     }
 }
