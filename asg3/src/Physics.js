@@ -4,7 +4,7 @@ class Physics {
         this.vel = new Vector3([0,0,0])
         this.acc = new Vector3([0,0,0])
         this.accRate = 10
-        this.maxSpeed = 20
+        this.maxSpeed = 40
         this.friction = 10
         this.movingDirection = new Vector3([0,0,0])
     }
