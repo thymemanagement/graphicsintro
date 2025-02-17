@@ -21,7 +21,7 @@ class World {
         this.modelQueue = []
         this.shouldClear = false
         this.stopped = false
-        this.showanimal = true
+        this.showanimal = false
 
     }
 
