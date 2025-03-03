@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>The Badlands</title>
+
+        <script src="../lib/webgl-utils.js"></script>
+        <script src="../lib/webgl-debug.js"></script>
+        <script src="../lib/cuon-utils.js"></script>
+        <script src="../lib/cuon-matrix-cse160.js"></script>
+
+        <script src="Walls.js"></script>
+        <script src="Quaternion.js"></script>
+        <script src="Shader.js"></script>
+        <script src="Physics.js"></script>
+        <script src="Light.js"></script>
+        <script src="Camera.js"></script>
+        <script src="Model.js"></script>
+        <script src="World.js"></script>
+        <script src="Skeleton.js"></script>
+        <script src="Main.js"></script>
+    </head>
+
+    <body onload="main()">
+        <canvas id="mainCanvas" width="1200" height="800">
+            Dude your browser is <i>aincent</i>. Here go download <a href="https://www.mozilla.org/en-US/firefox/new/">firefox</a>
+        </canvas>
+        <br> Thyme Eppstein | teppstei@ucsc.edu | February 32, 2025
+        <button type="button" id="clearButton">Clear Blocks</button>
+        <button type="button" id="stopButton">Freeze Rendering</button>
+        <button type="button" id="groundedButton">Toggle Flying</button>
+        Block Count: <span id="blocks"></span>
+        FPS: <span id="fpscount"></span> frames/sec
+        Speed: <span id="speed"></span>
+        Accel: <span id="moving"></span>
+        <br>
+        <div>
+            <button type="button" id="squareButton">Cubes</button>
+            <button type="button" id="triangleButton">Cylinders</button>
+            <button type="button" id="circleButton">Spheres</button>
+            <button type="button" id="animalButton">Capybara</button>
+            <button type="button" id="lightButton">Light</button>
+            Walk around with <b>WASD</b>. Press <b>R</b> and <b>F</b> to go up and down. <b>Click and Drag</b> to move the camera. Press <b>Shift+Click</b> to place a shape.
+        </div>
+        <div>
+            <label for="redslider">Red</label>
+            <input type="range" id="redslider" name="redslider" min="0" max="255" value="255">
+            <label for="greenslider">Green</label>
+            <input type="range" id="greenslider" name="greenslider" min="0" max="255" value="0">
+            <label for="blueslider">Blue</label>
+            <input type="range" id="blueslider" name="blueslider" min="0" max="255" value="0">
+            <button type="button" id="hidepoint">Toggle Point Light</button>
+            <button type="button" id="hidespot">Toggle Spot Light</button>
+            <button type="button" id="hidesun">Toggle Sun</button>
+            <button type="button" id="hideambient">Toggle Ambient</button>
+        <br>
+        <div>
+            <label for="sizeslider">Shape Size</label>
+            <input type="range" id="sizeslider" name="sizeslider" min="1" max="60" value="30" step="1">
+            <label for="yawslider">Yaw</label>
+            <input type="range" id="yawslider" name="yawslider" min="0" max="360" value="0" step="1">
+            <label for="pitchslider">Pitch</label>
+            <input type="range" id="pitchslider" name="pitchslider" min="0" max="360" value="0" step="1">
+            <label for="rollslider">Roll</label>
+            <input type="range" id="rollslider" name="rollslider" min="0" max="360" value="0" step="1">
+            You can move the point light around too, and change it's color and intensity! Try selecting the light option
+        </div> 
+</html>
