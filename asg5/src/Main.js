@@ -21,13 +21,13 @@ function main() {
 
     //textures
     const texLoader = new THREE.TextureLoader()
-    const dennisTex = texLoader.load('../assets/rp_dennis_posed_004_dif.jpg')
+    const dennisTex = texLoader.load('assets/rp_dennis_posed_004_dif.jpg')
     dennisTex.colorSpace = THREE.SRGBColorSpace
-    const boxTex = texLoader.load('../assets/Wooden Crate_Crate_BaseColor.png')
+    const boxTex = texLoader.load('assets/Wooden Crate_Crate_BaseColor.png')
     boxTex.colorSpace = THREE.SRGBColorSpace
-    const crosshairTex = texLoader.load('../assets/crosshair.png')
+    const crosshairTex = texLoader.load('assets/crosshair.png')
     crosshairTex.colorSpace = THREE.SRGBColorSpace
-    const skyTex = texLoader.load('../assets/circular-clouds-sky-texture.jpg')
+    const skyTex = texLoader.load('assets/circular-clouds-sky-texture.jpg')
     skyTex.colorspace = THREE.SRGBColorSpace
 
     //ambient light
@@ -152,7 +152,7 @@ function main() {
     //obj model
     const objLoader = new OBJLoader()
     let objMesh = new THREE.Mesh(cubeGeo, boxMaterial)
-    objLoader.load('../assets/rp_dennis_posed_004_100k.OBJ', root => {
+    objLoader.load('assets/rp_dennis_posed_004_100k.OBJ', root => {
         objMesh = root
         objMesh.traverse(child => {
             if (child.isMesh) {
