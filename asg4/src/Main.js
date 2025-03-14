@@ -77,7 +77,12 @@ function click(ev, canvas, shape_picker) {
             globalWorld.light.point.basePos = newPos
             globalWorld.light.point.intensity = size.value / 10
             globalWorld.light.point.baseColor = color
-        } else {
+        } else if (shape_picker.shape === "spot") {
+            globalWorld.light.spot.basePos = newPos
+            globalWorld.light.spot.rotation = rotateQ
+            globalWorld.light.spot.ratio = Math.sin(degreeToRad((size.value * 3) - 90))
+            globalWorld.light.spot.baseColor = color
+        }else {
             let model = null
             if (shape_picker.shape === "square") {
                 model = new Cube(newPos.elements, size.value / 60, color, rotateQ)
@@ -118,6 +123,8 @@ function main() {
 
     const gem = document.getElementById('lightButton')
     gem.onclick = function () { shape_picker.shape = "light"}
+    const spot = document.getElementById('spotButton')
+    spot.onclick = function () { shape_picker.shape = "spot"}
     const square = document.getElementById('squareButton')
     square.onclick = function () { shape_picker.shape = "square" }
     const triangle = document.getElementById('triangleButton')

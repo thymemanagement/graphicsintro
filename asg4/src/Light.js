@@ -2,7 +2,7 @@ class LightSystem {
     constructor() {
         this.sun = new DirectionalLight(new Vector3([0,500,0]), [0.8,0.8,0.5])
         this.point = new PointLight(new Vector3([-30.5,-0.5,67]), [1,0,1], 1)
-        this.spot = new SpotLight(new Vector3([-35.5,3,71]), new Vector3([0,1,0]), [1,1,1], 30, 0.7)
+        this.spot = new SpotLight(new Vector3([-35.5,3,71]), new Vector3([0,1,0]), [1,1,1], 40, 0.99)
         this.ambient = [0.1, 0.1, 0.1]
         this.ambienton = true
     }
@@ -13,7 +13,7 @@ class LightSystem {
         this.sun.lightPos = this.sun.lightPos.add(camera.physics.pos)
         this.point.rotation = this.point.rotation.multiply(Quaternion.fromAngleAxis(degreeToRad(50 * delta), 0, 1, 0))
         this.point.update(delta)
-        this.spot.rotation = this.spot.rotation.multiply(Quaternion.fromAngleAxis(degreeToRad(Math.sin(30 * this.spot.cycle)), 0, 0, 1))
+        //this.spot.rotation = this.spot.rotation.multiply(Quaternion.fromAngleAxis(degreeToRad(Math.sin(30 * this.spot.cycle)), 0, 0, 1))
         this.spot.update(delta)
     }
 
